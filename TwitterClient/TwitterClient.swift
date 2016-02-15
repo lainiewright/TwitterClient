@@ -23,6 +23,30 @@ class TwitterClient: BDBOAuth1SessionManager {
         return Static.instance
     }
     
+    func favoriteWithCompletionWithParams(params: NSDictionary, completion: (tweet: Tweet?, error: NSError?) -> () ) {
+        let id = params["id"] as! String
+        POST("1.1/favorites/create.json?id=\(id)", parameters: nil, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            let tweet = Tweet.tweetAsDictionary(response as! NSDictionary)
+            //print("response: \(response)")
+            completion(tweet: tweet, error: nil)
+        }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+            print("error: \(error)")
+            print(params["id"])
+            completion(tweet: nil, error: error)
+        }
+    }
+    
+    func retweetWithCompletionWithParams(params: NSDictionary, completion: (tweet: Tweet?, error: NSError?) -> () ) {
+        let id = params["id"] as! String
+        POST("1.1/statuses/retweet/\(id).json", parameters: nil, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            let tweet = Tweet.tweetAsDictionary(response as! NSDictionary)
+            completion(tweet: tweet, error: nil)
+        }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+                print("error: \(error)")
+                completion(tweet: nil, error: error)
+        }
+    }
+    
     func homeTimelineWithParams(params: NSDictionary?, completion: (tweets: [Tweet]?, error: NSError?) -> ()) {
         GET("1.1/statuses/home_timeline.json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
             //print("home timeline: \(response)")
@@ -57,7 +81,7 @@ class TwitterClient: BDBOAuth1SessionManager {
             
             TwitterClient.sharedInstance.GET("1.1/account/verify_credentials.json", parameters: nil, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
                 //print("user: \(response)")
-                var user = User(dictionary: response as! NSDictionary)
+                let user = User(dictionary: response as! NSDictionary)
                 User.currentUser = user
                 print("user: \(user.name)")
                 self.loginCompletion?(user: user, error: nil)
