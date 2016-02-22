@@ -8,8 +8,13 @@
 
 import UIKit
 
-class TweetCell: UITableViewCell {
+@objc protocol TweetCellDelegate: class {
+    optional func tweetCellUserProfileImageTapped(cell: TweetCell, forTwitterUser user: User?)
+}
+
+class TweetCell: UITableViewCell, TweetCellDelegate {
     var index: Int!
+    weak var delegate: TweetCellDelegate?
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -46,11 +51,11 @@ class TweetCell: UITableViewCell {
             if tweet != nil {
                 self.tweet.favoriteCount = (tweet?.favoriteCount)!
                 self.favoriteCountLabel.text = "\(self.tweet.favoriteCount)"
+                self.favoriteButton.imageView?.image = UIImage(named: "like_action_on_red")
             } else {
                 print("error: \(error)")
             }
         }
-        //favoriteCountLabel.hidden = false
     }
     
     @IBAction func onRetweet(sender: AnyObject) {
@@ -58,27 +63,29 @@ class TweetCell: UITableViewCell {
             if tweet != nil {
                 self.tweet.retweetCount = (tweet?.retweetCount)!
                 self.retweetCountLabel.text = "\(self.tweet.retweetCount)"
+                self.retweetButton.imageView?.image = UIImage(named: "retweet_action_on_green")
             } else {
                 print("error: \(error)")
             }
         }
-        //retweetCountLabel.hidden = false
     }
     
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-//        if tweet.retweetCount > 0 {
-//            retweetCountLabel.hidden = false
-//        }
-//        if tweet.favoriteCount > 0 {
-//            favoriteCountLabel.hidden = false
-//        }
-        
         avatarImageView.layer.cornerRadius = 3
         avatarImageView.clipsToBounds = true
         descriptionLabel.preferredMaxLayoutWidth = nameLabel.frame.size.width
+        
+        let tapGestureRecognizer = UITapGestureRecognizer()
+        tapGestureRecognizer.addTarget(self, action: "imageViewTapped")
+        avatarImageView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    func imageViewTapped() {
+        print("picture tapped")
+        delegate?.tweetCellUserProfileImageTapped?(self, forTwitterUser: tweet.author)
     }
     
     override func layoutSubviews() {

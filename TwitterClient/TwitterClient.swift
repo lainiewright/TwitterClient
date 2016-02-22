@@ -23,6 +23,18 @@ class TwitterClient: BDBOAuth1SessionManager {
         return Static.instance
     }
     
+    func postTweet(params: NSDictionary, completion: (tweet: Tweet?, error: NSError?) -> ()) {
+        let status = params["status"] as! String
+        POST("1.1/statuses/update.json?status=\(status)", parameters: nil, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            let tweet = Tweet.tweetAsDictionary(response as! NSDictionary)
+            completion(tweet: tweet, error: nil)
+        }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+            print("error: \(error)")
+            completion(tweet: nil, error: error)
+        }
+            
+    }
+    
     func favoriteWithCompletionWithParams(params: NSDictionary, completion: (tweet: Tweet?, error: NSError?) -> () ) {
         let id = params["id"] as! String
         POST("1.1/favorites/create.json?id=\(id)", parameters: nil, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
