@@ -12,7 +12,7 @@ import UIKit
     optional func tweetCellUserProfileImageTapped(cell: TweetCell, forTwitterUser user: User?)
 }
 
-class TweetCell: UITableViewCell, TweetCellDelegate {
+class TweetCell: UITableViewCell {
     var index: Int!
     weak var delegate: TweetCellDelegate?
     
@@ -84,7 +84,6 @@ class TweetCell: UITableViewCell, TweetCellDelegate {
     }
     
     func imageViewTapped() {
-        print("picture tapped")
         delegate?.tweetCellUserProfileImageTapped?(self, forTwitterUser: tweet.author)
     }
     

@@ -18,7 +18,6 @@ class ProfileViewController: UIViewController {
     
     @IBOutlet weak var followingCountLabel: UILabel!
 
-    @IBOutlet weak var followersCountLabel: UILabel!
     
     var user: User!
 
@@ -27,6 +26,7 @@ class ProfileViewController: UIViewController {
 
         nameLabel.text = user.name
         handleLabel.text = user.screenname
+        followingCountLabel.text = user.followersCount?.stringValue
         
         if let imageUrl = user.profileImageUrl {
             profileImageView.setImageWithURL(NSURL(string: imageUrl)!)

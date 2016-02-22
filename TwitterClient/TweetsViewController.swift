@@ -25,12 +25,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             self.tweets = tweets
             self.tableView.reloadData()
         }
-        
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        
-//        let tweetsViewController = storyboard.instantiateViewControllerWithIdentifier("TweetsViewController") as! TweetsViewController
-//        let profileViewController = storyboard.instantiateViewControllerWithIdentifier("ProfileViewController") as! ProfileViewController
-//        let segue = UIStoryboardSegue(identifier: "ShowProfile", source: tweetsViewController, destination: profileViewController)
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,10 +46,6 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         cell.tweet = tweets![indexPath.row]
         cell.index = indexPath.row
-        
-        let tapGestureRecognizer = UITapGestureRecognizer()
-        tapGestureRecognizer.addTarget(self, action: "imageViewTapped")
-        cell.avatarImageView.addGestureRecognizer(tapGestureRecognizer)
 
         cell.delegate = self
         
@@ -62,7 +53,15 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tweetCellUserProfileImageTapped(cell: TweetCell, forTwitterUser user: User?) {
-        self.performSegueWithIdentifier("ShowProfile", sender: cell)
+        
+        if let profileViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("ProfileViewController") as? ProfileViewController {
+            // get the user from the cell here and assign it to `user` object in `profileViewController`
+            profileViewController.user = user
+            
+            // push the `profileViewController` at the top of nav controller
+            navigationController?.pushViewController(profileViewController, animated: true)
+            
+        }
     }
    
     
@@ -86,13 +85,6 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             let navController = segue.destinationViewController as! UINavigationController
             let newTweetViewController = navController.topViewController as! NewTweetViewController
             newTweetViewController.user = _currentUser
-        } else if segue.identifier == "ShowProfile" {
-            let cell = sender as! TweetCell
-            let indexPath = tableView.indexPathForCell(cell)
-            let user = tweets![indexPath!.row].author
-            
-            let profileViewController = segue.destinationViewController as! ProfileViewController
-            profileViewController.user = user
         }
     }
 

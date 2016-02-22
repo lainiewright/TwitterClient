@@ -32,6 +32,10 @@ class DetailViewController: UIViewController {
         
         handleLabel.text = tweet.author?.screenname
         timeLabel.text = tweet.createdAtString
+        
+        if let likes = tweet.favoriteCount {
+            likesLabel.text = likes.stringValue
+        }
     }
     
     
