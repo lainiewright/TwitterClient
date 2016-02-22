@@ -99,7 +99,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-<a href="http://imgur.com/8vofzEI"><img src="http://i.imgur.com/8vofzEI.gif" title="source: imgur.com" /></a>
+<a href="http://imgur.com/lEE8brH"><img src="http://i.imgur.com/lEE8brH.gif" title="source: imgur.com" /></a>
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
