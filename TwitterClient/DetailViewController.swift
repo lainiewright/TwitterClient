@@ -55,6 +55,7 @@ class DetailViewController: UIViewController {
         TwitterClient.sharedInstance.favoriteWithCompletionWithParams(["id": tweet.id!]) { (tweet, error) -> () in
             if tweet != nil {
                 self.tweet.favoriteCount = (tweet?.favoriteCount)!
+                self.likesLabel.text = tweet?.favoriteCount.stringValue
                 self.favoriteButton.imageView?.image = UIImage(named: "like_action_on_red")
             } else {
                 print("error: \(error)")
